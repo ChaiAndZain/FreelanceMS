@@ -22,7 +22,8 @@ from utils           import (load_clients,  save_clients,
                               load_invoices, save_invoices,
                               next_id, calculate_summary,
                               print_financial_summary,
-                              generate_all_charts)
+                              generate_all_charts,
+                              send_invoice_email)
 from utils.visualizer import (chart_monthly_earnings,
                                chart_project_status,
                                chart_client_earnings)
@@ -400,6 +401,7 @@ def menu_invoices(invoices, clients, projects):
         print("  2. Naya Invoice Banayein")
         print("  3. Invoice Status Update Karein")
         print("  4. Invoice Delete Karein")
+        print("  5. Invoice Email Bhejo (Client ko)")
         print("  0. Wapas Main Menu")
 
         choice = input("\n  Option: ").strip()
@@ -408,6 +410,7 @@ def menu_invoices(invoices, clients, projects):
         elif choice == "2": add_invoice(invoices, clients, projects)
         elif choice == "3": update_invoice_status(invoices)
         elif choice == "4": delete_invoice(invoices)
+        elif choice == "5": email_invoice(invoices, clients)
         elif choice == "0": break
         else: print("  [!] Galat option.")
 
@@ -506,6 +509,45 @@ def update_invoice_status(invoices):
     inv.set_status(new_status)
     save_invoices(invoices)
     print(f"  ✔ Invoice status '{new_status}' ho gaya!")
+    pause()
+
+
+def email_invoice(invoices, clients):
+    """Invoice ko client ke email pe bhejo (SMTP via .env credentials)"""
+    header("INVOICE EMAIL BHEJEIN")
+    if not invoices:
+        print("  Koi invoice nahi hai abhi.")
+        pause()
+        return
+
+    inv_id = input("  Email karne wali Invoice ka ID (e.g. INV001): ").strip().upper()
+    inv = next((i for i in invoices if i.get_id() == inv_id), None)
+    if not inv:
+        print(f"  [!] ID '{inv_id}' ki invoice nahi mili.")
+        pause()
+        return
+
+    client = next((c for c in clients if c.get_id() == inv.get_client_id()), None)
+    if not client:
+        print(f"  [!] Is invoice ka client ({inv.get_client_id()}) record mein nahi mila.")
+        pause()
+        return
+
+    print(f"\n  Invoice  : {inv.get_id()}  (Total: ${inv.grand_total():.2f})")
+    print(f"  Client   : {client.get_name()}")
+    print(f"  Email pe : {client.get_email()}")
+    confirm = input("\n  Email bhejna confirm karein? (haan/nahi): ").strip().lower()
+    if confirm != "haan":
+        print("  Email cancel kiya gaya.")
+        pause()
+        return
+
+    print("  Email bheji ja rahi hai... (rukein)")
+    success, message = send_invoice_email(inv, client)
+    if success:
+        print(f"  ✔ {message}")
+    else:
+        print(f"  [!] {message}")
     pause()
 
 

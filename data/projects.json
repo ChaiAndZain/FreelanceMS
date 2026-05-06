@@ -48,5 +48,15 @@
         "hours_worked": 0.0,
         "status": "Pending",
         "description": "MySQL to PostgreSQL migration"
+    },
+    {
+        "project_id": "P006",
+        "title": "Website",
+        "client_id": "C004",
+        "deadline": "2003-02-24",
+        "hourly_rate": 150.0,
+        "hours_worked": 12.0,
+        "status": "Completed",
+        "description": "Webstie Server bnaya tha"
     }
 ]

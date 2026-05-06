@@ -22,5 +22,13 @@
         "phone": "+1-555-0192",
         "company": "GlobalTech USA",
         "payment_terms": "Immediate"
+    },
+    {
+        "client_id": "C004",
+        "name": "Zain",
+        "email": "zaindevexp@gmail.com",
+        "phone": "9342342344",
+        "company": "Amazon",
+        "payment_terms": "Net 15"
     }
 ]
