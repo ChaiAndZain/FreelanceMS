@@ -1,0 +1,26 @@
+[
+    {
+        "client_id": "C001",
+        "name": "Ahmed Raza",
+        "email": "ahmed.raza@techcorp.pk",
+        "phone": "+92-300-1234567",
+        "company": "TechCorp Pakistan",
+        "payment_terms": "Net 30"
+    },
+    {
+        "client_id": "C002",
+        "name": "Sara Khan",
+        "email": "sara.khan@designstudio.com",
+        "phone": "+92-321-9876543",
+        "company": "Design Studio",
+        "payment_terms": "Net 15"
+    },
+    {
+        "client_id": "C003",
+        "name": "John Smith",
+        "email": "john@globaltech.us",
+        "phone": "+1-555-0192",
+        "company": "GlobalTech USA",
+        "payment_terms": "Immediate"
+    }
+]

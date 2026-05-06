@@ -1,0 +1,40 @@
+[
+    {
+        "invoice_id": "INV001",
+        "client_id": "C001",
+        "project_id": "P001",
+        "issue_date": "2025-03-01",
+        "due_days": 30,
+        "items": [
+            {"description": "Web Development (80 hrs)", "quantity": 80, "unit_price": 25.0},
+            {"description": "Domain & Hosting Setup",   "quantity": 1,  "unit_price": 50.0}
+        ],
+        "status": "Paid",
+        "notes": "Thank you for your business!"
+    },
+    {
+        "invoice_id": "INV002",
+        "client_id": "C002",
+        "project_id": "P002",
+        "issue_date": "2025-03-20",
+        "due_days": 15,
+        "items": [
+            {"description": "UI/UX Design (40 hrs)", "quantity": 40, "unit_price": 30.0}
+        ],
+        "status": "Paid",
+        "notes": ""
+    },
+    {
+        "invoice_id": "INV003",
+        "client_id": "C003",
+        "project_id": "P003",
+        "issue_date": "2025-04-15",
+        "due_days": 30,
+        "items": [
+            {"description": "API Integration (50 hrs)", "quantity": 50, "unit_price": 35.0},
+            {"description": "Documentation",            "quantity": 5,  "unit_price": 20.0}
+        ],
+        "status": "Unpaid",
+        "notes": "Please pay before the due date."
+    }
+]
