@@ -7,3 +7,4 @@ from .finance     import (calculate_summary, print_financial_summary,
                            monthly_earnings_report, client_earnings_report)
 from .visualizer  import generate_all_charts
 from .emailer     import send_invoice_email
+from .currency    import current_USD_2_PKR_rate, get_usd_to_pkr_rate

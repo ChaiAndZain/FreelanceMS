@@ -61,9 +61,10 @@ freelance_system/
 │   └── invoice.py       ← Invoice + InvoiceItem classes
 ├── utils/
 │   ├── file_handler.py  ← JSON save/load
-│   ├── finance.py       ← Financial calculations (Pandas)
-│   ├── visualizer.py    ← Matplotlib charts
-│   └── emailer.py       ← SMTP email bhejne ka logic
+│   ├── finance.py       ← Financial calculations (Pandas, USD)
+│   ├── visualizer.py    ← Matplotlib charts (USD)
+│   ├── emailer.py       ← SMTP email bhejne ka logic
+│   └── currency.py      ← USD→PKR live rate (forex.pk scraper)
 ├── data/
 │   ├── clients.json
 │   ├── projects.json
@@ -79,8 +80,12 @@ freelance_system/
 - **Projects:** Add, View, Update, Delete (status tracking + overdue detection)
 - **Invoices:** Create with line items, status update (Paid/Unpaid), delete,
   aur **client ke email address pe SMTP se bhejo**
-- **Financial Reports:** Gross earnings, tax estimate, net income, profit margin
-- **Charts:** Monthly earnings bar chart, project status pie chart, client earnings chart
+- **Multi-Currency Invoices:** Har invoice ke liye USD ya **PKR** chunein.
+  PKR ke liye live rate forex.pk se fetch hoti hai aur invoice ke saath
+  snapshot ho jaati hai. **Internal data, reports aur charts hamesha USD
+  mein hote hain** — sirf invoice ka display/email currency-aware hai.
+- **Financial Reports:** Gross earnings, tax estimate, net income, profit margin (USD)
+- **Charts:** Monthly earnings bar chart, project status pie chart, client earnings chart (USD)
 - **Data Persistence:** Sab data JSON files mein automatically save hota hai
 - **Secure Credentials:** SMTP login `.env` file mein, code se alag
 
@@ -98,8 +103,26 @@ error message dikhayi degi (password aur sensitive details print nahi hoti).
 
 ---
 
+## Multi-Currency Invoices (USD / PKR)
+1. Invoice banate waqt items add karne ke baad system **Currency** poochega
+2. **USD** chunein → standard invoice ban jayegi
+3. **PKR** chunein → system live USD→PKR rate forex.pk se fetch karega:
+   - Network problem ho toh manually rate enter kar sakte hain
+   - Rate invoice ke saath **snapshot** ho jaati hai (JSON mein `fx_rate`)
+   - Future views aur emails wahi locked rate use karte hain — taake
+     amount kabhi mismatch na ho
+
+> **Important:** Invoice ki line items aur amounts JSON mein hamesha
+> USD mein store hoti hain. PKR sirf display + email render ke liye hai.
+> Iska matlab: charts, financial summary, monthly/client earnings reports
+> hamesha USD mein consistent rahti hain — chahe individual invoices PKR
+> mein bheji gayi hon.
+
+---
+
 ## Dependencies
 - Python 3.7+
 - `pandas` — report generation
 - `matplotlib` — chart generation
 - `python-dotenv` — `.env` file se credentials load karna
+- `requests` + `beautifulsoup4` — live USD→PKR rate fetch karna

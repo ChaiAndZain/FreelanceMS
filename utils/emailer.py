@@ -45,8 +45,13 @@ def _load_env():
 
 
 def _build_invoice_body(invoice, client):
-    """Email ke liye plain-text invoice body banao"""
+    """
+    Email ke liye plain-text invoice body banao.
+    Invoice ki currency (USD ya PKR) ke hisaab se amounts dikhayi jaati hain.
+    """
     sender = os.environ.get("SMTP_FROM_NAME", "Freelancer")
+    sym = invoice.currency_symbol()
+    cur = invoice.get_currency()
 
     lines = [
         f"As-salamu alaykum {client.get_name()},",
@@ -58,23 +63,37 @@ def _build_invoice_body(invoice, client):
         f"Issue Date  : {invoice.get_issue_date()}",
         f"Due Date    : {invoice.due_date()}",
         f"Status      : {invoice.get_status()}",
+        f"Currency    : {cur}",
+    ]
+    if cur != "USD":
+        lines.append(
+            f"FX Rate     : 1 USD = {sym} {invoice.get_fx_rate():.2f} "
+            f"(snapshot at issue)"
+        )
+    lines += [
         "",
-        "-" * 55,
-        f"{'Description':<28} {'Qty':>6} {'Price':>9} {'Total':>10}",
-        "-" * 55,
+        "-" * 60,
+        f"{'Description':<28} {'Qty':>6} {'Price':>11} {'Total':>13}",
+        "-" * 60,
     ]
     for item in invoice.get_items():
         lines.append(
             f"{item.description:<28} {item.quantity:>6.1f} "
-            f"${item.unit_price:>8.2f} ${item.total():>9.2f}"
+            f"{sym}{invoice.display_unit_price(item):>10.2f} "
+            f"{sym}{invoice.display_item_total(item):>12.2f}"
         )
     lines += [
-        "-" * 55,
-        f"{'Subtotal':<44} ${invoice.subtotal():>9.2f}",
-        f"{'Tax (10%)':<44} ${invoice.tax_amount():>9.2f}",
-        f"{'GRAND TOTAL':<44} ${invoice.grand_total():>9.2f}",
-        "=" * 55,
+        "-" * 60,
+        f"{'Subtotal':<46} {sym}{invoice.display_subtotal():>13.2f}",
+        f"{'Tax (10%)':<46} {sym}{invoice.display_tax():>13.2f}",
+        f"{'GRAND TOTAL':<46} {sym}{invoice.display_total():>13.2f}",
     ]
+    if cur != "USD":
+        lines.append(
+            f"{'(USD equivalent)':<46} ${invoice.grand_total():>13.2f}"
+        )
+    lines.append("=" * 60)
+
     if invoice.get_notes():
         lines += ["", f"Notes: {invoice.get_notes()}"]
     lines += [
@@ -123,8 +142,12 @@ def send_invoice_email(invoice, client):
     except ValueError:
         return False, f"SMTP_PORT galat hai: '{port_str}'"
 
+    sym = invoice.currency_symbol()
     msg = EmailMessage()
-    msg["Subject"] = f"Invoice {invoice.get_id()} — Due {invoice.due_date()}"
+    msg["Subject"] = (
+        f"Invoice {invoice.get_id()} — {sym}{invoice.display_total():,.2f} "
+        f"{invoice.get_currency()} (Due {invoice.due_date()})"
+    )
     msg["From"]    = f"{from_name} <{from_email}>" if from_name else from_email
     msg["To"]      = to_email
     msg.set_content(_build_invoice_body(invoice, client))

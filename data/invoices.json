@@ -18,7 +18,9 @@
             }
         ],
         "status": "Paid",
-        "notes": "Thank you for your business!"
+        "notes": "Thank you for your business!",
+        "currency": "USD",
+        "fx_rate": 1.0
     },
     {
         "invoice_id": "INV002",
@@ -34,7 +36,9 @@
             }
         ],
         "status": "Paid",
-        "notes": ""
+        "notes": "",
+        "currency": "USD",
+        "fx_rate": 1.0
     },
     {
         "invoice_id": "INV003",
@@ -55,7 +59,9 @@
             }
         ],
         "status": "Unpaid",
-        "notes": "Please pay before the due date."
+        "notes": "Please pay before the due date.",
+        "currency": "USD",
+        "fx_rate": 1.0
     },
     {
         "invoice_id": "INV004",
@@ -71,7 +77,9 @@
             }
         ],
         "status": "Unpaid",
-        "notes": "Jalid Paisy Send karo"
+        "notes": "Jalid Paisy Send karo",
+        "currency": "USD",
+        "fx_rate": 1.0
     },
     {
         "invoice_id": "INV005",
@@ -86,7 +94,27 @@
                 "unit_price": 150.0
             }
         ],
+        "status": "Paid",
+        "notes": "Jaldi Paise send karo",
+        "currency": "USD",
+        "fx_rate": 1.0
+    },
+    {
+        "invoice_id": "INV006",
+        "client_id": "C004",
+        "project_id": "P006",
+        "issue_date": "2004-03-13",
+        "due_days": 12,
+        "items": [
+            {
+                "description": "Pizza Website",
+                "quantity": 12.0,
+                "unit_price": 20.0
+            }
+        ],
         "status": "Unpaid",
-        "notes": "Jaldi Paise send karo"
+        "notes": "Give me MOney",
+        "currency": "PKR",
+        "fx_rate": 279.75
     }
 ]

@@ -23,7 +23,8 @@ from utils           import (load_clients,  save_clients,
                               next_id, calculate_summary,
                               print_financial_summary,
                               generate_all_charts,
-                              send_invoice_email)
+                              send_invoice_email,
+                              get_usd_to_pkr_rate)
 from utils.visualizer import (chart_monthly_earnings,
                                chart_project_status,
                                chart_client_earnings)
@@ -479,9 +480,36 @@ def add_invoice(invoices, clients, projects):
             pause()
             return
 
+        # ── Currency selection ─────────────────────────────────────
+        # Internally amounts hamesha USD mein store hote hain.
+        # PKR sirf is invoice ke display ke liye, fx_rate snapshot ke saath.
+        print("\n  Invoice currency chunein:")
+        currency = choose_from_list(["USD", "PKR"])
+        fx_rate = 1.0
+        if currency == "PKR":
+            print("  Live USD→PKR rate fetch ho raha hai...")
+            rate = get_usd_to_pkr_rate()
+            if rate is None:
+                # Network fail — user se manual rate maango ya cancel karo
+                print("  Online rate nahi mil saka.")
+                manual = input("  Manual rate daalen (1 USD = Rs. ?), "
+                               "ya khaali = USD pe revert: ").strip()
+                if manual:
+                    try:
+                        rate = float(manual)
+                    except ValueError:
+                        print("  [!] Galat rate. USD pe revert ho raha hai.")
+                        currency = "USD"
+                else:
+                    currency = "USD"
+            if currency == "PKR":
+                fx_rate = float(rate)
+                print(f"  ✔ Rate lock: 1 USD = Rs. {fx_rate:.2f}")
+
         inv_id = next_id("INV", [i.get_id() for i in invoices])
         new_inv = Invoice(inv_id, cid, pid, issue_date, due_days,
-                          items, "Unpaid", notes or "")
+                          items, "Unpaid", notes or "",
+                          currency, fx_rate)
         invoices.append(new_inv)
         save_invoices(invoices)
 
