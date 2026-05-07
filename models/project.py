@@ -1,31 +1,26 @@
-# ================================================================
-# models/project.py
-# Project class — har freelance project ki detail yahan hogi
-# ================================================================
-
 from datetime import datetime
 
-# Project ke possible statuses
+# possible statuses
 STATUS_OPTIONS = ["Pending", "In Progress", "Completed", "Cancelled"]
 
 class Project:
     """
-    Ek freelance project ko represent karta hai.
-    Client ke saath linked hota hai client_id ke zariye.
+    Project class for project data
     """
 
+    # constructor
     def __init__(self, project_id, title, client_id, deadline,
                  hourly_rate, hours_worked, status, description=""):
-        self.__project_id   = project_id    # unique ID (P001, P002...)
-        self.__title        = title          # project ka naam
-        self.__client_id    = client_id      # kis client ka project hai
-        self.__deadline     = deadline       # deadline (YYYY-MM-DD format)
+        self.__project_id = project_id    # unique ID (P001, P002...)
+        self.__title = title          # project ka naam
+        self.__client_id  = client_id      # kis client  ka project hai
+        self.__deadline  = deadline       # deadline (YYYY-MM-DD format)
         self.__hourly_rate  = float(hourly_rate)   # per ghante rate (USD mein)
         self.__hours_worked = float(hours_worked)  # kitne ghante kaam kiya
-        self.__status       = status         # Pending / In Progress / Completed
-        self.__description  = description    # project ka brief description
+        self.__status= status   # Pending / In Progress / Completed
+        self.__description  =description    # project ka brief description
 
-    # ── Getters ──────────────────────────────────────────────────
+    #  ------ getters -------------
     def get_id(self):           return self.__project_id
     def get_title(self):        return self.__title
     def get_client_id(self):    return self.__client_id
@@ -35,7 +30,7 @@ class Project:
     def get_status(self):       return self.__status
     def get_description(self):  return self.__description
 
-    # ── Setters ──────────────────────────────────────────────────
+    #   ------------ etters ---------
     def set_title(self, t):         self.__title = t
     def set_deadline(self, d):      self.__deadline = d
     def set_hourly_rate(self, r):   self.__hourly_rate = float(r)
@@ -43,12 +38,12 @@ class Project:
     def set_status(self, s):        self.__status = s
     def set_description(self, d):   self.__description = d
 
-    # ── Gross earning calculate karo is project ke liye ──────────
+    # ------- gross earning ---------------
     def gross_earning(self):
         # rate * hours = total kamai
         return self.__hourly_rate * self.__hours_worked
 
-    # ── Deadline guzar gayi hai? ──────────────────────────────────
+    # -- deadline overdue ---------------
     def is_overdue(self):
         try:
             dl = datetime.strptime(self.__deadline, "%Y-%m-%d").date()
@@ -56,7 +51,7 @@ class Project:
         except:
             return False
 
-    # ── Dictionary mein convert karo ─────────────────────────────
+    # ----- to dictionary ---------------
     def to_dict(self):
         return {
             "project_id":   self.__project_id,
@@ -69,6 +64,7 @@ class Project:
             "description":  self.__description
         }
 
+    # ----- from dictionary to project object ---------
     @classmethod
     def from_dict(cls, data):
         return cls(
@@ -82,8 +78,9 @@ class Project:
             data.get("description", "")
         )
 
+    # ----- string representation ---------------
     def __str__(self):
-        overdue_tag = "  ⚠ OVERDUE!" if self.is_overdue() else ""
+        overdue_tag = "  OVERDUE!" if self.is_overdue() else ""
         return (f"  ID          : {self.__project_id}\n"
                 f"  Title       : {self.__title}\n"
                 f"  Client ID   : {self.__client_id}\n"
