@@ -1,23 +1,10 @@
 import sys
 import os
-
-# add project folder path to imports
-sys.path.insert(0, os.path.dirname(__file__))
-
-from models          import Client, Project, Invoice, InvoiceItem
+from models import Client, Project, Invoice, InvoiceItem
 from models.project  import STATUS_OPTIONS
 from models.invoice  import INVOICE_STATUS
-from utils           import (load_clients,  save_clients,
-                              load_projects, save_projects,
-                              load_invoices, save_invoices,
-                              next_id, calculate_summary,
-                              print_financial_summary,
-                              generate_all_charts,
-                              send_invoice_email,
-                              get_usd_to_pkr_rate)
-from utils.visualizer import (chart_monthly_earnings,
-                               chart_project_status,
-                               chart_client_earnings)
+from utils import (load_clients, save_clients, load_projects, save_projects, load_invoices, save_invoices, next_id, calculate_summary, print_financial_summary, send_invoice_email, get_usd_to_pkr_rate)
+from utils.visualizer import generate_all_charts
 from datetime import datetime
 
 
