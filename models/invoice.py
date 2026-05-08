@@ -1,30 +1,18 @@
-# ================================================================
-# models/invoice.py
-# Invoice class — payment ka record yahan hoga
-# Project ke complete hone ke baad invoice generate hoti hai
-#
-# IMPORTANT: Internal storage hamesha USD mein hota hai (data,
-# reports, charts — sab USD-based). `currency` field sirf is invoice
-# ke display ke liye hai. PKR ke liye fx_rate (USD->PKR snapshot)
-# bhi save hoti hai taake future views consistent rahein.
-# ================================================================
-
 from datetime import datetime, timedelta
 
-# Invoice ke possible statuses
+# possible statuses
 INVOICE_STATUS = ["Unpaid", "Paid", "Overdue"]
-
-# Supported display currencies
+# supported  currencies
 SUPPORTED_CURRENCIES = ["USD", "PKR"]
 
 
 class InvoiceItem:
-    """Invoice ki ek line item — kya kaam kiya aur kitne ka (USD mein)"""
+    """Invoice item: task info"""
 
     def __init__(self, description, quantity, unit_price):
-        self.description = description       # kaam ka naam
-        self.quantity    = float(quantity)   # kitna (hours ya units)
-        self.unit_price  = float(unit_price) # per unit price USD mein
+        self.description = description  # kaam ka naam
+        self.quantity   = float(quantity)  
+        self.unit_price  = float(unit_price) 
 
     def total(self):
         # is item ka total USD mein = quantity * price
@@ -44,40 +32,33 @@ class InvoiceItem:
 
 class Invoice:
     """
-    Client ko bheji jaane wali invoice.
-    Ek ya zyada InvoiceItems hoti hain.
-    Tax calculate karta hai aur net total dikhata hai.
+    CLient bill/invoce class
+    it could have multiple inoviceitems
+    tax is calculated and displayed in USD
 
-    Currency notes:
-    - subtotal(), tax_amount(), grand_total() hamesha USD return karte hain
-      (reports aur summaries inhi pe depend karte hain)
-    - display_*() methods invoice ki currency mein values dete hain
     """
 
-    TAX_RATE = 0.10   # 10% tax rate (badal sakte hain)
+    TAX_RATE = 0.10   # 10% tax rate 
 
     def __init__(self, invoice_id, client_id, project_id,
                  issue_date, due_days, items, status="Unpaid", notes="",
                  currency="USD", fx_rate=1.0):
-        self.__invoice_id  = invoice_id     # unique ID (INV001...)
-        self.__client_id   = client_id      # client ka ID
-        self.__project_id  = project_id     # related project
-        self.__issue_date  = issue_date     # invoice ki date (YYYY-MM-DD)
-        self.__due_days    = int(due_days)  # kitne din mein payment chahiye
-        self.__items       = items          # list of InvoiceItem objects
-        self.__status      = status         # Unpaid / Paid / Overdue
-        self.__notes       = notes          # extra notes
+        self.__invoice_id = invoice_id     # unique ID(INV001...)
+        self.__client_id = client_id      # client ka ID
+        self.__project_id = project_id     # related project
+        self.__issue_date=issue_date     # invoice ki date (YYYY-MM-DD)
+        self.__due_days = int(due_days)  # kitne din mein payment chahiye
+        self.__items= items          # list of InvoiceItem objects
+        self.__status = status         # Unpaid / Paid / Overdue
+        self.__notes = notes          # extra notes
 
-        # Currency snapshot — change nahi hote baad mein, taake invoice
-        # exactly waisa hi dikhe jaisa client ko bheja gaya tha
-        currency = (currency or "USD").upper()
-        if currency not in SUPPORTED_CURRENCIES:
-            currency = "USD"
+        # curreny and fx-rate
+        currency = currency.upper()
+        if currency not in SUPPORTED_CURRENCIES: currency = "USD"
         self.__currency = currency
-        # USD ke liye rate hamesha 1.0; PKR ke liye snapshot rate
         self.__fx_rate = float(fx_rate) if currency != "USD" else 1.0
 
-    # ── Getters ──────────────────────────────────────────────────
+    # ── Getters ──────────────────────────────
     def get_id(self):          return self.__invoice_id
     def get_client_id(self):   return self.__client_id
     def get_project_id(self):  return self.__project_id
@@ -92,7 +73,7 @@ class Invoice:
     def set_status(self, s):   self.__status = s
     def set_notes(self, n):    self.__notes = n
 
-    # ── Due date calculate karo ───────────────────────────────────
+    # ---------------- returns due data ------
     def due_date(self):
         try:
             issue = datetime.strptime(self.__issue_date, "%Y-%m-%d")
@@ -100,7 +81,7 @@ class Invoice:
         except:
             return "N/A"
 
-    # ── USD-canonical amounts (reports inhe use karti hain) ──────
+    # --- total amount of all items ----
     def subtotal(self):
         return sum(item.total() for item in self.__items)
 
@@ -110,12 +91,11 @@ class Invoice:
     def grand_total(self):
         return self.subtotal() + self.tax_amount()
 
-    # ── Display amounts (invoice ki currency mein) ───────────────
     def currency_symbol(self):
         return "Rs." if self.__currency == "PKR" else "$"
 
     def convert(self, usd_amount):
-        """USD amount ko invoice currency mein convert karo"""
+        """USD amount 2 invoice currency"""
         return usd_amount * self.__fx_rate
 
     def display_unit_price(self, item):
@@ -133,11 +113,12 @@ class Invoice:
     def display_total(self):
         return self.convert(self.grand_total())
 
-    # ── Item add karo ────────────────────────────────────────────
+    #  ------- adds item to invoce ------
     def add_item(self, item: InvoiceItem):
+
         self.__items.append(item)
 
-    # ── Dictionary mein convert karo ─────────────────────────────
+    # ----- object conversion --------
     def to_dict(self):
         return {
             "invoice_id":  self.__invoice_id,
@@ -145,7 +126,7 @@ class Invoice:
             "project_id":  self.__project_id,
             "issue_date":  self.__issue_date,
             "due_days":    self.__due_days,
-            "items":       [i.to_dict() for i in self.__items],
+            "items":     [i.to_dict() for i in self.__items],
             "status":      self.__status,
             "notes":       self.__notes,
             "currency":    self.__currency,
@@ -164,18 +145,18 @@ class Invoice:
             items,
             data.get("status", "Unpaid"),
             data.get("notes", ""),
-            # Backward compat: purani invoices mein ye fields nahi hongi
             data.get("currency", "USD"),
             data.get("fx_rate", 1.0),
         )
 
-    # ── Formatted invoice print karo ─────────────────────────────
+    # ----- print string -
     def __str__(self):
         sym = self.currency_symbol()
-        # Width adjust karen — "Rs." 3 chars hai, "$" sirf 1 hai
+        #spcaing 
         price_w = 9 if sym == "$" else 11
         total_w = 10 if sym == "$" else 12
 
+        # kines 
         lines = [
             f"\n  {'='*55}",
             f"  INVOICE: {self.__invoice_id}    [Currency: {self.__currency}]",
@@ -208,7 +189,7 @@ class Invoice:
         ]
         if self.__currency != "USD":
             lines.append(
-                f"  {'(USD equivalent)':<40} ${self.grand_total():>11.2f}"
+                f"  {'(USD equivalent)':<40} $  {self.grand_total():>11.2f}"
             )
         lines.append(f"  {'='*55}")
         if self.__notes:

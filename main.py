@@ -1,17 +1,7 @@
-#!/usr/bin/env python3
-# ================================================================
-# main.py  —  Freelance Management System
-# CS112 / Python Programming — Semester Project
-#
-# Ye program ek freelancer ke liye complete management system hai.
-# CLI (Command Line Interface) based hai — numbered menus se chalta hai.
-# Saara data JSON files mein save hota hai.
-# ================================================================
-
 import sys
 import os
 
-# Apna project folder path mein add karo taake imports kaam karein
+# add project folder path to imports
 sys.path.insert(0, os.path.dirname(__file__))
 
 from models          import Client, Project, Invoice, InvoiceItem
@@ -32,40 +22,40 @@ from datetime import datetime
 
 
 # ================================================================
-# HELPER FUNCTIONS — UI ke liye chhote reusable functions
+# ---------------------------HELPER FUNCTIONS --------------------
 # ================================================================
 
 def clear():
-    """Screen saaf karo (Windows aur Linux dono ke liye)"""
+    """clear the screen"""
     os.system("cls" if os.name == "nt" else "clear")
 
 
 def header(title):
-    """Har section ka heading print karo"""
+    """prints heading of each section"""
     print("\n" + "═"*55)
     print(f"  {title}")
     print("═"*55)
 
 
 def pause():
-    """User ko padhne ka waqt do — Enter dabane ka wait karo"""
-    input("\n  [Enter dabayein jari rakhne ke liye...]")
+    """waits for Enter key to press"""
+    input("\n  [Press Enter to contine...]")
 
 
 def get_input(prompt, required=True, input_type=str, min_val=None, max_val=None):
     """
-    Safe user input lene ka function.
-    - required: khaali nahi ho sakta
-    - input_type: int ya float ka validation
-    - min_val / max_val: range check
+    get user input with validation
+    - required: if True, the input is required
+    - input_type: type of the input
+    - min_val / max_val: minimum and maximum values
     """
     while True:
         try:
             value = input(f"  {prompt}: ").strip()
 
-            # Required field khaali hai?
+            # if required is True and the input is empty, print error message and continue
             if required and not value:
-                print("  [!] Ye field khaali nahi ho sakta.")
+                print("  [!] This field is required.")
                 continue
 
             # Type conversion
@@ -74,31 +64,31 @@ def get_input(prompt, required=True, input_type=str, min_val=None, max_val=None)
 
             # Range check
             if min_val is not None and value < min_val:
-                print(f"  [!] Value {min_val} se kam nahi ho sakti.")
+                print(f"  [!] Value should be greater than {min_val}.")
                 continue
             if max_val is not None and value > max_val:
-                print(f"  [!] Value {max_val} se zyada nahi ho sakti.")
+                print(f"  [!] Value should be less than {max_val}.")
                 continue
 
             return value
 
         except ValueError:
-            print(f"  [!] Galat format. {input_type.__name__} chahiye.")
+            print(f"  [!] Invalid format. {input_type.__name__} is required.")
 
 
 def get_date_input(prompt):
-    """YYYY-MM-DD format mein date lo — validate karo"""
+    """get date in YYYY-MM-DD format"""
     while True:
         date_str = input(f"  {prompt} (YYYY-MM-DD): ").strip()
         try:
-            datetime.strptime(date_str, "%Y-%m-%d")
+            datetime.strptime(date_str, "%Y-%m-%d") # validate date format
             return date_str
-        except ValueError:
-            print("  [!] Galat date format. Misaal: 2025-06-30")
+        except:
+            print("  [!] Invalid date format. Example: 2026-06-30")
 
 
-def choose_from_list(options, prompt="Option chunein"):
-    """Numbered list se ek option select karwao"""
+def choose_from_list(options, prompt="Select an option"):
+    """select an option from a numbered list"""
     for i, opt in enumerate(options, 1):
         print(f"    {i}. {opt}")
     while True:
@@ -106,40 +96,40 @@ def choose_from_list(options, prompt="Option chunein"):
             choice = int(input(f"  {prompt} (1-{len(options)}): "))
             if 1 <= choice <= len(options):
                 return options[choice - 1]
-            print(f"  [!] 1 aur {len(options)} ke beech mein daalen.")
-        except ValueError:
-            print("  [!] Sirf number daalen.")
+            print(f"  [!] Invalid option. Select a number between 1 and {len(options)}.")
+        except:
+            print("  [!] Invalid input. Please enter a valid number.")
 
 
 # ================================================================
-# CLIENT MANAGEMENT — Add, View, Update, Delete
+# ---------- Client Management --------
 # ================================================================
 
 def menu_clients(clients):
-    """Client management ka sub-menu"""
+    """client management sub-menu"""
     while True:
         header("CLIENT MANAGEMENT")
-        print("  1. Saare Clients Dekhein")
-        print("  2. Naya Client Add Karein")
-        print("  3. Client Update Karein")
-        print("  4. Client Delete Karein")
-        print("  0. Wapas Main Menu")
+        print("  1. View all clients")
+        print("  2. Add a new client")
+        print("  3. Update a client")
+        print("  4. Delete a client")
+        print("  0. Return to main menu")
 
-        choice = input("\n  Option: ").strip()
+        choice = input("\n  Select an option: ").strip()
 
         if   choice == "1": view_clients(clients)
         elif choice == "2": add_client(clients)
         elif choice == "3": update_client(clients)
         elif choice == "4": delete_client(clients)
         elif choice == "0": break
-        else: print("  [!] Galat option.")
+        else: print("  [!] Invalid option.")
 
 
 def view_clients(clients):
-    """Saare clients ki list dikhao"""
+    """view all clients"""
     header("CLIENTS LIST")
     if not clients:
-        print("  Koi client nahi hai abhi.")
+        print("  No clients found.")
     else:
         for c in clients:
             print(f"\n{c}")
@@ -148,119 +138,119 @@ def view_clients(clients):
 
 
 def add_client(clients):
-    """Naya client add karo"""
-    header("NAYA CLIENT ADD KAREIN")
+    """add a new client"""
+    header("ADD NEW CLIENT")
     try:
-        name   = get_input("Naam")
+        name   = get_input("Name")
         email  = get_input("Email")
         phone  = get_input("Phone")
-        company = get_input("Company (khaali chhor sakte hain)", required=False)
-        print("  Payment Terms chunein:")
+        company = get_input("Company (optional)", required=False)
+        print("  Payment Terms:")
         terms  = choose_from_list(["Net 15", "Net 30", "Net 60", "Immediate"])
 
-        # Agle unique ID generate karo
+        # generate a unique ID for the new client
         cid = next_id("C", [c.get_id() for c in clients])
 
         new_client = Client(cid, name, email, phone, company or "N/A", terms)
         clients.append(new_client)
         save_clients(clients)    # file mein save karo
 
-        print(f"\n  ✔ Client '{name}' add ho gaya! ID: {cid}")
+        print(f"\n  ✔ Client '{name}' has been added! with ID: {cid}")
     except KeyboardInterrupt:
-        print("\n  [!] Operation cancel kiya gaya.")
+        print("\n  [!] Operation cancelled.")
     pause()
 
-
+# --------- Update Client ----
 def update_client(clients):
-    """Existing client ki details update karo"""
-    header("CLIENT UPDATE KAREIN")
+    """update an existing client"""
+    header("UPDATE CLIENT")
     if not clients:
-        print("  Koi client nahi hai.")
+        print("  No clients found.")
         pause()
         return
 
-    # ID se client dhundho
-    cid = input("  Client ID daalen (e.g. C001): ").strip().upper()
+    # search for clientby ID
+    cid = input("  Enter Client ID (e.g. C001): ").strip().upper()
     client = next((c for c in clients if c.get_id() == cid), None)
 
     if not client:
-        print(f"  [!] ID '{cid}' ka client nahi mila.")
+        print(f"  [!] Client with ID '{cid}' not found.")
         pause()
         return
 
     print(f"\n  Current info:\n{client}")
-    print("\n  Khaali chhor dein agar change nahi karna.\n")
+    print("\n  Leave blank if don't want to change.\n")
 
     try:
-        name    = input(f"  Naam [{client.get_name()}]: ").strip()
-        email   = input(f"  Email [{client.get_email()}]: ").strip()
-        phone   = input(f"  Phone [{client.get_phone()}]: ").strip()
+        name  = input(f"  Name [{client.get_name()}]: ").strip()
+        email = input(f"  Email [{client.get_email()}]: ").strip()
+        phone= input(f"  Phone [{client.get_phone()}]: ").strip()
         company = input(f"  Company [{client.get_company()}]: ").strip()
 
-        # Sirf woh fields update karo jo user ne likha
-        if name:    client.set_name(name)
-        if email:   client.set_email(email)
-        if phone:   client.set_phone(phone)
+        # update only the fields that the user has provided
+        if name: client.set_name(name)
+        if email: client.set_email(email)
+        if phone:client.set_phone(phone)
         if company: client.set_company(company)
 
         save_clients(clients)
-        print("  ✔ Client update ho gaya!")
+        print("  ✔ client updated successfully!")
     except KeyboardInterrupt:
-        print("\n  [!] Operation cancel kiya gaya.")
+        print("\n  [!] Operation cancelled.")
     pause()
 
 
 def delete_client(clients):
-    """Client delete karo"""
-    header("CLIENT DELETE KAREIN")
-    cid = input("  Delete karne wale client ka ID: ").strip().upper()
+    """delete a client"""
+    header("DELETE CLIENT")
+    cid = input("  Enter Client ID to delete: ").strip().upper()
     client = next((c for c in clients if c.get_id() == cid), None)
 
     if not client:
-        print(f"  [!] ID '{cid}' ka client nahi mila.")
+        print(f"  [!] Client with ID '{cid}' not found.")
         pause()
         return
 
-    # Confirm lena zaroori hai — galti se delete na ho
-    confirm = input(f"  '{client.get_name()}' ko delete karna chahte hain? (haan/nahi): ").strip().lower()
-    if confirm == "haan":
+    # Confirm deletion
+    confirm = input(f"  Do you want to delete '{client.get_name()}'? (yes/no): ").strip().lower()
+    if confirm == "yes":
         clients.remove(client)
         save_clients(clients)
-        print("  ✔ Client delete ho gaya.")
+        print("  ✔ Client deleted successfully.")
     else:
-        print("  Delete cancel kiya gaya.")
+        print("  Deletion cancelled.")
     pause()
 
 
 # ================================================================
-# PROJECT MANAGEMENT — Add, View, Update, Delete
+# --- Project Management --------
 # ================================================================
 
 def menu_projects(projects, clients):
-    """Project management ka sub-menu"""
+    """project management sub-menu"""
     while True:
         header("PROJECT MANAGEMENT")
-        print("  1. Saare Projects Dekhein")
-        print("  2. Naya Project Add Karein")
-        print("  3. Project Update Karein")
-        print("  4. Project Delete Karein")
-        print("  0. Wapas Main Menu")
+        print("  1. View all projects")
+        print("  2. Add a new project")
+        print("  3. Update a project")
+        print("  4. Delete a project")
+        print("  0. Return to main menu")
 
-        choice = input("\n  Option: ").strip()
+        choice = input("\n  Select an option: ").strip()
 
         if   choice == "1": view_projects(projects)
         elif choice == "2": add_project(projects, clients)
         elif choice == "3": update_project(projects)
         elif choice == "4": delete_project(projects)
         elif choice == "0": break
-        else: print("  [!] Galat option.")
+        else: print("  [!] Invalid option.")
 
 
 def view_projects(projects):
-    """Saare projects ki list dikhao"""
+    """view all projects"""
     header("PROJECTS LIST")
     if not projects:
-        print("  Koi project nahi hai abhi.")
+        print("  No projects found.")
     else:
         for p in projects:
             print(f"\n{p}")
@@ -269,31 +259,31 @@ def view_projects(projects):
 
 
 def add_project(projects, clients):
-    """Naya project add karo"""
-    header("NAYA PROJECT ADD KAREIN")
+    """add a new project"""
+    header("ADD NEW PROJECT")
     if not clients:
-        print("  [!] Pehle ek client add karein.")
+        print("  [!] Please add at least one client first.")
         pause()
         return
 
     try:
-        title = get_input("Project ka Title")
+        title = get_input("Project Title")
 
-        # Client ID select karwao existing clients mein se
-        print("  Client chunein:")
+        # select a client from the existing clients
+        print("  Select a client:")
         for c in clients:
             print(f"    {c.get_id()} — {c.get_name()} ({c.get_company()})")
         cid = input("  Client ID: ").strip().upper()
         if not any(c.get_id() == cid for c in clients):
-            print("  [!] Galat Client ID.")
+            print("  [!] Invalid client ID.")
             pause()
             return
 
         deadline     = get_date_input("Deadline")
         hourly_rate  = get_input("Hourly Rate (USD)", input_type=float, min_val=0.1)
-        hours_worked = get_input("Hours Worked (0 agar abhi shuru nahi)", input_type=float, min_val=0)
-        print("  Status chunein:")
-        status      = choose_from_list(STATUS_OPTIONS)
+        hours_worked = get_input("Hours Worked (0 if not started)", input_type=float, min_val=0)
+        print("  Status:")
+        status  = choose_from_list(STATUS_OPTIONS)
         description = get_input("Description (optional)", required=False)
 
         pid = next_id("P", [p.get_id() for p in projects])
@@ -304,31 +294,31 @@ def add_project(projects, clients):
         projects.append(new_project)
         save_projects(projects)
 
-        print(f"\n  ✔ Project '{title}' add ho gaya! ID: {pid}")
+        print(f"\n  ✔ Project '{title}' has been added! with ID: {pid}")
         print(f"     Estimated Earnings: ${new_project.gross_earning():.2f}")
     except KeyboardInterrupt:
-        print("\n  [!] Operation cancel kiya gaya.")
+        print("\n  [!] Operation cancelled.")
     pause()
 
 
 def update_project(projects):
-    """Existing project update karo"""
-    header("PROJECT UPDATE KAREIN")
+    """update an existing project"""
+    header("UPDATE PROJECT")
     if not projects:
-        print("  Koi project nahi hai.")
+        print("  No projects found.")
         pause()
         return
 
-    pid = input("  Project ID daalen (e.g. P001): ").strip().upper()
+    pid = input("  Enter Project ID (e.g. P001): ").strip().upper()
     proj = next((p for p in projects if p.get_id() == pid), None)
 
     if not proj:
-        print(f"  [!] ID '{pid}' ka project nahi mila.")
+        print(f"  [!] Project with ID '{pid}' not found.")
         pause()
         return
 
     print(f"\n  Current info:\n{proj}\n")
-    print("  Khaali chhor dein agar change nahi karna.\n")
+    print("  Leave blank if don't want to change.\n")
 
     try:
         title = input(f"  Title [{proj.get_title()}]: ").strip()
@@ -336,10 +326,10 @@ def update_project(projects):
         hours_str = input(f"  Hours Worked [{proj.get_hours_worked()}]: ").strip()
         rate_str  = input(f"  Hourly Rate [{proj.get_hourly_rate()}]: ").strip()
 
-        print("  Naya status chunein (Enter dabayein agar same rakhna hai):")
+        print("  New status (Enter to keep same):")
         for i, s in enumerate(STATUS_OPTIONS, 1):
             print(f"    {i}. {s}")
-        st_choice = input("  Status (number ya khaali): ").strip()
+        st_choice = input("  Status (number or leave blank): ").strip()
 
         if title:    proj.set_title(title)
         if deadline:
@@ -347,13 +337,13 @@ def update_project(projects):
                 datetime.strptime(deadline, "%Y-%m-%d")
                 proj.set_deadline(deadline)
             except ValueError:
-                print("  [!] Galat date format — status nahi badla.")
+                print("  [!] Invalid date format.")
         if hours_str:
             try: proj.set_hours_worked(float(hours_str))
-            except: print("  [!] Galat hours value.")
+            except: print("  [!] Invalid hours value.")
         if rate_str:
             try: proj.set_hourly_rate(float(rate_str))
-            except: print("  [!] Galat rate value.")
+            except: print("  [!] Invalid rate value.")
         if st_choice:
             try:
                 idx = int(st_choice) - 1
@@ -363,49 +353,49 @@ def update_project(projects):
                 pass
 
         save_projects(projects)
-        print("  ✔ Project update ho gaya!")
+        print("  ✔ Project updated")
     except KeyboardInterrupt:
-        print("\n  [!] Operation cancel kiya gaya.")
+        print("\n  [!] Operation cancelled.")
     pause()
 
 
 def delete_project(projects):
-    """Project delete karo"""
-    header("PROJECT DELETE KAREIN")
-    pid = input("  Delete karne wale project ka ID: ").strip().upper()
+    """delete a project"""
+    header("DELETE PROJECT")
+    pid = input("  Enter Project ID to delete: ").strip().upper()
     proj = next((p for p in projects if p.get_id() == pid), None)
 
     if not proj:
-        print(f"  [!] ID '{pid}' ka project nahi mila.")
+        print(f"  [!] Project with ID '{pid}' not found.")
         pause()
         return
 
-    confirm = input(f"  '{proj.get_title()}' ko delete karna chahte hain? (haan/nahi): ").strip().lower()
-    if confirm == "haan":
+    confirm = input(f"  Do you want to delete '{proj.get_title()}'? (yes/no): ").strip().lower()
+    if confirm == "yes":
         projects.remove(proj)
         save_projects(projects)
-        print("  ✔ Project delete ho gaya.")
+        print("  ✔ Project deleted successfully.")
     else:
-        print("  Delete cancel kiya gaya.")
+        print("  Deletion cancelled.")
     pause()
 
 
 # ================================================================
-# INVOICE MANAGEMENT — Add, View, Update, Delete
+# ---------- Invoice Management ----------------------
 # ================================================================
 
 def menu_invoices(invoices, clients, projects):
-    """Invoice management ka sub-menu"""
+    """invoice management sub-menu""" 
     while True:
         header("INVOICE MANAGEMENT")
-        print("  1. Saari Invoices Dekhein")
-        print("  2. Naya Invoice Banayein")
-        print("  3. Invoice Status Update Karein")
-        print("  4. Invoice Delete Karein")
-        print("  5. Invoice Email Bhejo (Client ko)")
-        print("  0. Wapas Main Menu")
+        print("  1. View all invoices")
+        print("  2. Add a new invoice")
+        print("  3. Update invoice status")
+        print("  4. Delete an invoice")
+        print("  5. Email an invoice to the client")
+        print("  0. Return to main menu")
 
-        choice = input("\n  Option: ").strip()
+        choice = input("\n  Select an option: ").strip()
 
         if   choice == "1": view_invoices(invoices)
         elif choice == "2": add_invoice(invoices, clients, projects)
@@ -413,14 +403,14 @@ def menu_invoices(invoices, clients, projects):
         elif choice == "4": delete_invoice(invoices)
         elif choice == "5": email_invoice(invoices, clients)
         elif choice == "0": break
-        else: print("  [!] Galat option.")
+        else: print("  [!] Invalid option.")
 
 
 def view_invoices(invoices):
-    """Saari invoices dikhao"""
+    """view all invoices"""
     header("INVOICES LIST")
     if not invoices:
-        print("  Koi invoice nahi hai abhi.")
+        print("  No invoices found.")
     else:
         for inv in invoices:
             print(inv)
@@ -428,77 +418,75 @@ def view_invoices(invoices):
 
 
 def add_invoice(invoices, clients, projects):
-    """Naya invoice banao"""
-    header("NAYA INVOICE BANAYEIN")
+    """add a new invoice"""
+    header("ADD NEW INVOICE")
     if not clients or not projects:
-        print("  [!] Pehle clients aur projects add karein.")
+        print("  [!] Please add at least one client and one project first.")
         pause()
         return
 
     try:
-        # Client aur project select karo
-        print("  Client chunein:")
+        # select a client from the existing clients
+        print("  Select a client:")
         for c in clients:
             print(f"    {c.get_id()} — {c.get_name()}")
         cid = input("  Client ID: ").strip().upper()
         if not any(c.get_id() == cid for c in clients):
-            print("  [!] Galat Client ID.")
+            print("  [!] Invalid client ID.")
             pause()
             return
 
-        print("\n  Project chunein:")
-        client_projs = [p for p in projects if p.get_client_id() == cid]
+        print("\n  Select a project:")
+        client_projs = [p for p in projects if p.get_client_id() == cid] # get all projects for the selected client
         if not client_projs:
-            print(f"  [!] Client {cid} ka koi project nahi.")
+            print(f"  [!] Client {cid} has no projects.")
             pause()
             return
         for p in client_projs:
             print(f"    {p.get_id()} — {p.get_title()} (${p.gross_earning():.2f})")
         pid = input("  Project ID: ").strip().upper()
         if not any(p.get_id() == pid for p in client_projs):
-            print("  [!] Galat Project ID.")
+            print("  [!] Invalid project ID.")
             pause()
             return
 
-        issue_date = get_date_input("Invoice ki Date")
-        due_days   = get_input("Kitne din mein payment chahiye", input_type=int, min_val=1)
-        notes      = get_input("Notes (optional)", required=False)
+        issue_date = get_date_input("Invoice Date")
+        due_days = get_input("How many days for payment", input_type=int, min_val=1)
+        notes  = get_input("Notes (optional)", required=False)
 
-        # Line items add karo
+        # add line items to the invoice
         items = []
-        print("\n  Invoice items add karein (khaali description pe rok jaega):")
+        print("\n  Add invoice items (leave description blank to stop):")
         while True:
-            desc = input("    Item description (khaali = stop): ").strip()
+            desc = input("    Item description (leave blank to stop): ").strip()
             if not desc:
                 break
-            qty   = get_input(f"    '{desc}' ki quantity/hours", input_type=float, min_val=0.1)
-            price = get_input(f"    '{desc}' ka unit price (USD)", input_type=float, min_val=0.01)
+            qty   = get_input(f"    '{desc}' quantity or hours", input_type=float, min_val=0.1)
+            price = get_input(f"    '{desc}' unit price (USD)", input_type=float, min_val=0.01)
             items.append(InvoiceItem(desc, qty, price))
 
         if not items:
-            print("  [!] Kam az kam ek item zaroori hai.")
+            print("  [!] At least one item is required.")
             pause()
             return
 
-        # ── Currency selection ─────────────────────────────────────
-        # Internally amounts hamesha USD mein store hote hain.
-        # PKR sirf is invoice ke display ke liye, fx_rate snapshot ke saath.
+        # select the currency for the invoice
         print("\n  Invoice currency chunein:")
         currency = choose_from_list(["USD", "PKR"])
         fx_rate = 1.0
         if currency == "PKR":
-            print("  Live USD→PKR rate fetch ho raha hai...")
+            print("  Fetching live USD→PKR rate...")
             rate = get_usd_to_pkr_rate()
             if rate is None:
-                # Network fail — user se manual rate maango ya cancel karo
-                print("  Online rate nahi mil saka.")
-                manual = input("  Manual rate daalen (1 USD = Rs. ?), "
-                               "ya khaali = USD pe revert: ").strip()
+                # Network fail — ask user to enter manual rate
+                print("  Online rate not found.")
+                manual = input("  Enter manual rate (1 USD = Rs. ?), "
+                               "or leave blank to revert to USD: ").strip()
                 if manual:
                     try:
                         rate = float(manual)
                     except ValueError:
-                        print("  [!] Galat rate. USD pe revert ho raha hai.")
+                        print("  [!] Invalid rate.")
                         currency = "USD"
                 else:
                     currency = "USD"
@@ -514,63 +502,63 @@ def add_invoice(invoices, clients, projects):
         save_invoices(invoices)
 
         print(new_inv)   # naya invoice print karo
-        print(f"\n  ✔ Invoice {inv_id} create ho gayi!")
+        print(f"\n  ✔ Invoice {inv_id} has been added!")
     except KeyboardInterrupt:
-        print("\n  [!] Operation cancel kiya gaya.")
+        print("\n  [!] Operation cancelled.")
     pause()
 
 
 def update_invoice_status(invoices):
-    """Invoice ka payment status update karo"""
-    header("INVOICE STATUS UPDATE KAREIN")
-    inv_id = input("  Invoice ID daalen (e.g. INV001): ").strip().upper()
+    """update the payment status of an invoice"""
+    header("UPDATE INVOICE STATUS")
+    inv_id = input("  Enter Invoice ID to update: ").strip().upper()
     inv = next((i for i in invoices if i.get_id() == inv_id), None)
 
     if not inv:
-        print(f"  [!] ID '{inv_id}' ki invoice nahi mili.")
+        print(f"  [!] Invoice with ID '{inv_id}' not found.")
         pause()
         return
 
     print(f"  Current Status: {inv.get_status()}")
-    print("  Naya status chunein:")
+    print("  Select a new status:")
     new_status = choose_from_list(INVOICE_STATUS)
     inv.set_status(new_status)
     save_invoices(invoices)
-    print(f"  ✔ Invoice status '{new_status}' ho gaya!")
+    print(f"  ✔ Invoice status '{new_status}' has been updated")
     pause()
 
 
 def email_invoice(invoices, clients):
-    """Invoice ko client ke email pe bhejo (SMTP via .env credentials)"""
-    header("INVOICE EMAIL BHEJEIN")
+    """send an invoice email to the client"""
+    header("EMAIL INVOICE")
     if not invoices:
-        print("  Koi invoice nahi hai abhi.")
+        print("  No invoices found.")
         pause()
         return
 
-    inv_id = input("  Email karne wali Invoice ka ID (e.g. INV001): ").strip().upper()
+    inv_id = input("  Enter Invoice ID to email: ").strip().upper()
     inv = next((i for i in invoices if i.get_id() == inv_id), None)
     if not inv:
-        print(f"  [!] ID '{inv_id}' ki invoice nahi mili.")
+        print(f"  [!] Invoice with ID '{inv_id}' not found.")
         pause()
         return
 
     client = next((c for c in clients if c.get_id() == inv.get_client_id()), None)
     if not client:
-        print(f"  [!] Is invoice ka client ({inv.get_client_id()}) record mein nahi mila.")
+        print(f"  [!] Client with ID '{inv.get_client_id()}' not found.")
         pause()
         return
 
     print(f"\n  Invoice  : {inv.get_id()}  (Total: ${inv.grand_total():.2f})")
     print(f"  Client   : {client.get_name()}")
-    print(f"  Email pe : {client.get_email()}")
-    confirm = input("\n  Email bhejna confirm karein? (haan/nahi): ").strip().lower()
-    if confirm != "haan":
-        print("  Email cancel kiya gaya.")
+    print(f"  Email  : {client.get_email()}")
+    confirm = input("\n  Confirm email sending? (yes/no): ").strip().lower()
+    if confirm != "yes":
+        print("  Email sending cancelled.")
         pause()
         return
 
-    print("  Email bheji ja rahi hai... (rukein)")
+    print("  Sending email... ")
     success, message = send_invoice_email(inv, client)
     if success:
         print(f"  ✔ {message}")
@@ -580,44 +568,44 @@ def email_invoice(invoices, clients):
 
 
 def delete_invoice(invoices):
-    """Invoice delete karo"""
-    header("INVOICE DELETE KAREIN")
-    inv_id = input("  Delete karne wali Invoice ka ID: ").strip().upper()
+    """delete an invoice"""
+    header("DELETE INVOICE")
+    inv_id = input("  Enter Invoice ID to delete: ").strip().upper()
     inv = next((i for i in invoices if i.get_id() == inv_id), None)
 
     if not inv:
-        print(f"  [!] ID '{inv_id}' ki invoice nahi mili.")
+        print(f"  [!] Invoice with ID '{inv_id}' not found.")
         pause()
         return
 
-    confirm = input(f"  Invoice '{inv_id}' delete karna chahte hain? (haan/nahi): ").strip().lower()
-    if confirm == "haan":
+    confirm = input(f"  Do you want to delete Invoice '{inv_id}'? (yes/no): ").strip().lower()
+    if confirm == "yes":
         invoices.remove(inv)
         save_invoices(invoices)
-        print("  ✔ Invoice delete ho gayi.")
+        print("  ✔ Invoice deleted successfully.")
     else:
-        print("  Delete cancel kiya gaya.")
+        print("  Deletion cancelled.")
     pause()
 
 
 # ================================================================
-# REPORTS & ANALYTICS
+# REPORTS & CHARTS
 # ================================================================
 
 def menu_reports(projects, clients, invoices):
-    """Reports aur charts ka sub-menu"""
+    """reports and charts sub-menu"""
     while True:
         header("REPORTS & ANALYTICS")
-        print("  1. Financial Summary Dekhein")
+        print("  1. Financial Summary")
         print("  2. Monthly Earnings Report")
         print("  3. Client-wise Earnings Report")
-        print("  4. Sab Charts Generate Karein (PNG files)")
-        print("  0. Wapas Main Menu")
+        print("  4. Generate all charts (PNG files)")
+        print("  0. Return to main menu")
 
-        choice = input("\n  Option: ").strip()
+        choice = input("\n  Select an option: ").strip()
 
         if choice == "1":
-            header("FINANCIAL SUMMARY")
+            header("FINANCIAL SUMMARY REPORT")
             summary = calculate_summary(projects, invoices)
             print_financial_summary(summary)
             pause()
@@ -627,7 +615,7 @@ def menu_reports(projects, clients, invoices):
             from utils.finance import monthly_earnings_report
             df = monthly_earnings_report(projects)
             if df.empty:
-                print("  Koi completed project nahi.")
+                print("  No completed projects found.")
             else:
                 print(f"\n  {'Month':<12} {'Earnings':>12}")
                 print("  " + "-"*26)
@@ -642,9 +630,9 @@ def menu_reports(projects, clients, invoices):
             from utils.finance import client_earnings_report
             df = client_earnings_report(projects, clients)
             if df.empty:
-                print("  Koi completed project nahi.")
+                print("  No completed projects found.")
             else:
-                print(f"\n  {'Client':<20} {'Total Earned':>12}")
+                print(f"\n  {'Client':<20} {'Total Earnings':>12}")
                 print("  " + "-"*34)
                 for _, row in df.iterrows():
                     print(f"  {row['Client']:<20} ${row['Earnings']:>10.2f}")
@@ -657,20 +645,20 @@ def menu_reports(projects, clients, invoices):
         elif choice == "0":
             break
         else:
-            print("  [!] Galat option.")
+            print("  [!] Invalid option.")
 
 
 # ================================================================
-# MAIN MENU
+# MAIN MENAGEMENT SYSTEM
 # ================================================================
 
 def main_menu():
     """
-    Program ka main entry point.
-    Startup par data load karo, phir menu loop chalao.
+    main entry point
+    load data on startup, then enter the main menu loop
     """
-    # ── Startup: JSON files se data load karo ────────────────────
-    print("\n  Freelance Management System shuru ho raha hai...")
+    # ── Startup: load data from JSON files ────────────────────
+    print("\n  Freelance Management System starting...")
     clients  = load_clients()
     projects = load_projects()
     invoices = load_invoices()
@@ -686,25 +674,25 @@ def main_menu():
         print("    Python Semester Project")
         print("═"*55)
         print("\n  MAIN MENU:\n")
-        print("  1.  Clients        — Clients manage karein")
-        print("  2.  Projects       — Projects manage karein")
-        print("  3.  Invoices       — Invoices banayein aur dekhein")
-        print("  4.  Reports        — Financial reports aur charts")
-        print("  0.  Bahar Niklen   — Program band karein")
+        print("  1.  Clients        — Manage clients") 
+        print("  2.  Projects       — Manage projects")
+        print("  3.  Invoices       — Manage invoices")
+        print("  4.  Reports        — Financial reports and charts")
+        print("  0.  Exit           — Exit the program")
         print()
 
-        choice = input("  Option chunein: ").strip()
+        choice = input("  Select an option: ").strip()
 
         if   choice == "1": menu_clients(clients)
         elif choice == "2": menu_projects(projects, clients)
         elif choice == "3": menu_invoices(invoices, clients, projects)
         elif choice == "4": menu_reports(projects, clients, invoices)
         elif choice == "0":
-            print("\n  Khuda Hafiz! Shukriya Freelance Management System use karne ka.")
-            print("  Aapka data save ho gaya hai.\n")
+            print("\n  Thank you for using the Freelance Management System.")
+            print("  Your data has been saved.\n")
             break
         else:
-            print("  [!] Galat option. 0 se 4 ke beech mein chunein.")
+            print("  [!] Invalid option. Select a number between 0 and 4.")
             pause()
 
 
@@ -715,6 +703,6 @@ if __name__ == "__main__":
     try:
         main_menu()
     except KeyboardInterrupt:
-        # Ctrl+C dabaya — gracefully band karo
-        print("\n\n  Program band ho raha hai... Khuda Hafiz!")
+        # Ctrl+C pressed — gracefully exit
+        print("\n\n  Program is exiting... Thank you for using the Freelance Management System.")
         sys.exit(0)

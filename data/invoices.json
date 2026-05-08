@@ -116,5 +116,41 @@
         "notes": "Give me MOney",
         "currency": "PKR",
         "fx_rate": 279.75
+    },
+    {
+        "invoice_id": "INV007",
+        "client_id": "C004",
+        "project_id": "P006",
+        "issue_date": "2003-12-30",
+        "due_days": 20,
+        "items": [
+            {
+                "description": "Website",
+                "quantity": 10.0,
+                "unit_price": 150.0
+            }
+        ],
+        "status": "Unpaid",
+        "notes": "\"Paise jaldi send kerdo AKHI\"",
+        "currency": "PKR",
+        "fx_rate": 282.1
+    },
+    {
+        "invoice_id": "INV008",
+        "client_id": "C004",
+        "project_id": "P006",
+        "issue_date": "2003-12-30",
+        "due_days": 20,
+        "items": [
+            {
+                "description": "Website",
+                "quantity": 10.0,
+                "unit_price": 150.0
+            }
+        ],
+        "status": "Paid",
+        "notes": "\"Paise jaldi send kerdo AKHI\"",
+        "currency": "PKR",
+        "fx_rate": 279.8
     }
 ]
