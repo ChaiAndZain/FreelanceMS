@@ -1,62 +1,62 @@
 [
     {
         "project_id": "P001",
-        "title": "E-commerce Website",
+        "title": "DDoS Attacker script",
         "client_id": "C001",
-        "deadline": "2025-02-28",
-        "hourly_rate": 25.0,
-        "hours_worked": 80.0,
-        "status": "Completed",
-        "description": "Full-stack e-commerce site with payment integration"
+        "deadline": "2026-04-8",
+        "hourly_rate": 80.0,
+        "hours_worked": 20.0,
+        "status": "In Progress",
+        "description": "a script to attack the web servers"
     },
     {
         "project_id": "P002",
-        "title": "Mobile App UI Design",
-        "client_id": "C002",
-        "deadline": "2025-03-15",
-        "hourly_rate": 30.0,
-        "hours_worked": 40.0,
+        "title": "Promp Injection Agent",
+        "client_id": "C001",
+        "deadline": "2026-04-12",
+        "hourly_rate": 100.0,
+        "hours_worked": 23.0,
         "status": "Completed",
-        "description": "Figma UI/UX design for Android app"
+        "description": "an agent that try to get the system prompt of LLMs"
     },
     {
         "project_id": "P003",
-        "title": "API Integration",
-        "client_id": "C003",
-        "deadline": "2025-04-10",
-        "hourly_rate": 35.0,
-        "hours_worked": 50.0,
+        "title": "LLama4 Release website",
+        "client_id": "C002",
+        "deadline": "2026-03-20",
+        "hourly_rate": 30.0,
+        "hours_worked": 10.0,
         "status": "Completed",
-        "description": "REST API integration with third-party services"
+        "description": "landing page for meta new opensource model realse"
     },
     {
         "project_id": "P004",
-        "title": "SEO Optimization",
-        "client_id": "C001",
-        "deadline": "2025-05-01",
-        "hourly_rate": 20.0,
-        "hours_worked": 30.0,
-        "status": "In Progress",
-        "description": "On-page and off-page SEO for existing website"
+        "title": "Go APIs",
+        "client_id": "C003",
+        "deadline": "2026-02-5",
+        "hourly_rate": 50.0,
+        "hours_worked": 10.0,
+        "status": "Completed",
+        "description": "a high performance api endpoint for realtime maps"
     },
     {
         "project_id": "P005",
-        "title": "Database Migration",
-        "client_id": "C003",
-        "deadline": "2025-05-20",
-        "hourly_rate": 40.0,
-        "hours_worked": 0.0,
-        "status": "Pending",
-        "description": "MySQL to PostgreSQL migration"
+        "title": "Barbie Dools Design",
+        "client_id": "C004",
+        "deadline": "2026-03-12",
+        "hourly_rate": 120.0,
+        "hours_worked": 12.0,
+        "status": "Completed",
+        "description": "3d design of Barbie Dools for manufacutring"
     },
     {
         "project_id": "P006",
-        "title": "Website",
+        "title": "Google Logo Design",
         "client_id": "C004",
-        "deadline": "2003-02-24",
-        "hourly_rate": 150.0,
-        "hours_worked": 12.0,
+        "deadline": "2026-03-23",
+        "hourly_rate": 200.0,
+        "hours_worked": 13.0,
         "status": "Completed",
-        "description": "Webstie Server bnaya tha"
+        "description": "logo design of a google event"
     }
 ]

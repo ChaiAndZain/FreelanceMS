@@ -1,34 +1,34 @@
 [
     {
         "client_id": "C001",
-        "name": "Ahmed Raza",
-        "email": "ahmed.raza@techcorp.pk",
-        "phone": "+92-300-1234567",
-        "company": "TechCorp Pakistan",
-        "payment_terms": "Net 30"
+        "name": "Zain",
+        "email": "zaindevexp@gmail.com",
+        "phone": "+92423424232",
+        "company": "Google",
+        "payment_terms": "Net 15"
     },
     {
         "client_id": "C002",
-        "name": "Sara Khan",
-        "email": "sara.khan@designstudio.com",
-        "phone": "+92-321-9876543",
-        "company": "Design Studio",
+        "name": "Ali",
+        "email": "zaindevexp@gmail.com",
+        "phone": "+9323423354",
+        "company": "Meta",
         "payment_terms": "Net 15"
     },
     {
         "client_id": "C003",
-        "name": "John Smith",
-        "email": "john@globaltech.us",
-        "phone": "+1-555-0192",
-        "company": "GlobalTech USA",
+        "name": "Doremon",
+        "email": "zaindevexp@gmail.com",
+        "phone": "943523423",
+        "company": "ASML",
         "payment_terms": "Immediate"
     },
     {
         "client_id": "C004",
-        "name": "Zain",
-        "email": "zaindevexp@gmail.com",
-        "phone": "9342342344",
-        "company": "Amazon",
+        "name": "Amna",
+        "email": "amna@gmail.com",
+        "phone": "+94334534534",
+        "company": "Google",
         "payment_terms": "Net 15"
     }
 ]

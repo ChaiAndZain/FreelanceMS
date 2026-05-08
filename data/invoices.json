@@ -1,156 +1,56 @@
 [
     {
         "invoice_id": "INV001",
-        "client_id": "C001",
-        "project_id": "P001",
-        "issue_date": "2025-03-01",
-        "due_days": 30,
+        "client_id": "C004",
+        "project_id": "P005",
+        "issue_date": "2026-03-12",
+        "due_days": 1,
         "items": [
             {
-                "description": "Web Development (80 hrs)",
-                "quantity": 80.0,
-                "unit_price": 25.0
-            },
-            {
-                "description": "Domain & Hosting Setup",
+                "description": "3d design of dool",
                 "quantity": 1.0,
-                "unit_price": 50.0
+                "unit_price": 2000.0
             }
         ],
-        "status": "Paid",
-        "notes": "Thank you for your business!",
+        "status": "Unpaid",
+        "notes": "Send the money as per contract",
         "currency": "USD",
         "fx_rate": 1.0
     },
     {
         "invoice_id": "INV002",
-        "client_id": "C002",
-        "project_id": "P002",
-        "issue_date": "2025-03-20",
-        "due_days": 15,
+        "client_id": "C001",
+        "project_id": "P001",
+        "issue_date": "2026-04-9",
+        "due_days": 1,
         "items": [
             {
-                "description": "UI/UX Design (40 hrs)",
-                "quantity": 40.0,
-                "unit_price": 30.0
-            }
-        ],
-        "status": "Paid",
-        "notes": "",
-        "currency": "USD",
-        "fx_rate": 1.0
-    },
-    {
-        "invoice_id": "INV003",
-        "client_id": "C003",
-        "project_id": "P003",
-        "issue_date": "2025-04-15",
-        "due_days": 30,
-        "items": [
-            {
-                "description": "API Integration (50 hrs)",
-                "quantity": 50.0,
-                "unit_price": 35.0
-            },
-            {
-                "description": "Documentation",
-                "quantity": 5.0,
-                "unit_price": 20.0
+                "description": "Python DDoS script",
+                "quantity": 1.0,
+                "unit_price": 2500.0
             }
         ],
         "status": "Unpaid",
-        "notes": "Please pay before the due date.",
-        "currency": "USD",
-        "fx_rate": 1.0
+        "notes": "Send the money as per decided",
+        "currency": "PKR",
+        "fx_rate": 279.8
     },
     {
-        "invoice_id": "INV004",
-        "client_id": "C003",
-        "project_id": "P003",
-        "issue_date": "2004-12-22",
-        "due_days": 2,
+        "invoice_id": "INV003",
+        "client_id": "C004",
+        "project_id": "P006",
+        "issue_date": "2026-03-29",
+        "due_days": 1,
         "items": [
             {
-                "description": "Website a Landing page bnaya tha",
-                "quantity": 12.0,
+                "description": "google event logo",
+                "quantity": 1.0,
                 "unit_price": 2000.0
             }
         ],
         "status": "Unpaid",
-        "notes": "Jalid Paisy Send karo",
+        "notes": "",
         "currency": "USD",
         "fx_rate": 1.0
-    },
-    {
-        "invoice_id": "INV005",
-        "client_id": "C004",
-        "project_id": "P006",
-        "issue_date": "2004-12-03",
-        "due_days": 12,
-        "items": [
-            {
-                "description": "Landing page completed",
-                "quantity": 1.0,
-                "unit_price": 150.0
-            }
-        ],
-        "status": "Paid",
-        "notes": "Jaldi Paise send karo",
-        "currency": "USD",
-        "fx_rate": 1.0
-    },
-    {
-        "invoice_id": "INV006",
-        "client_id": "C004",
-        "project_id": "P006",
-        "issue_date": "2004-03-13",
-        "due_days": 12,
-        "items": [
-            {
-                "description": "Pizza Website",
-                "quantity": 12.0,
-                "unit_price": 20.0
-            }
-        ],
-        "status": "Unpaid",
-        "notes": "Give me MOney",
-        "currency": "PKR",
-        "fx_rate": 279.75
-    },
-    {
-        "invoice_id": "INV007",
-        "client_id": "C004",
-        "project_id": "P006",
-        "issue_date": "2003-12-30",
-        "due_days": 20,
-        "items": [
-            {
-                "description": "Website",
-                "quantity": 10.0,
-                "unit_price": 150.0
-            }
-        ],
-        "status": "Unpaid",
-        "notes": "\"Paise jaldi send kerdo AKHI\"",
-        "currency": "PKR",
-        "fx_rate": 282.1
-    },
-    {
-        "invoice_id": "INV008",
-        "client_id": "C004",
-        "project_id": "P006",
-        "issue_date": "2003-12-30",
-        "due_days": 20,
-        "items": [
-            {
-                "description": "Website",
-                "quantity": 10.0,
-                "unit_price": 150.0
-            }
-        ],
-        "status": "Paid",
-        "notes": "\"Paise jaldi send kerdo AKHI\"",
-        "currency": "PKR",
-        "fx_rate": 279.8
     }
 ]

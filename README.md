@@ -36,7 +36,7 @@ SMTP_FROM_NAME=Your Name
 SMTP_FROM_EMAIL=your.email@gmail.com
 ```
 
-> **Note for Gmail users:** A regular Gmail password will not work. You must create an [App Password](https://myaccount.google.com/apppasswords) (2-Step Verification must be enabled).
+> **For Gmail users:** A regular Gmail password will not work. You must create an [App Password](https://myaccount.google.com/apppasswords) (2-Step Verification must be enabled).
 
 > The `.env` file is gitignored — never commit it to a public repo. Use `.env.example` as a shareable template.
 
