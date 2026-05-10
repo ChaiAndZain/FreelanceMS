@@ -1,23 +1,23 @@
 [
     {
         "project_id": "P001",
-        "title": "DDoS Attacker script",
+        "title": "Gemma4 release website",
         "client_id": "C001",
-        "deadline": "2026-04-8",
+        "deadline": "2026-04-9",
         "hourly_rate": 80.0,
         "hours_worked": 20.0,
-        "status": "In Progress",
-        "description": "a script to attack the web servers"
+        "status": "Completed",
+        "description": "a website for gemma4 model relase"
     },
     {
         "project_id": "P002",
-        "title": "Promp Injection Agent",
+        "title": "Talking AI Agent",
         "client_id": "C001",
         "deadline": "2026-04-12",
         "hourly_rate": 100.0,
         "hours_worked": 23.0,
         "status": "Completed",
-        "description": "an agent that try to get the system prompt of LLMs"
+        "description": "an speech-2-speech AI agent"
     },
     {
         "project_id": "P003",
@@ -58,5 +58,15 @@
         "hours_worked": 13.0,
         "status": "Completed",
         "description": "logo design of a google event"
+    },
+    {
+        "project_id": "P007",
+        "title": "B2-Bomber",
+        "client_id": "C005",
+        "deadline": "2026-05-9",
+        "hourly_rate": 20.0,
+        "hours_worked": 30.0,
+        "status": "Completed",
+        "description": "design the 3d model of B2-Spirit Bomber"
     }
 ]

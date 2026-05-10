@@ -1,6 +1,5 @@
 import os
 import smtplib
-import ssl
 from email.message import EmailMessage
 from dotenv import load_dotenv
 
@@ -71,7 +70,7 @@ def send_invoice_email(invoice, client):
 
     # send the email
     try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", "465", timeout=30) as smtp:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=30) as smtp:
             smtp.login(user, password)
             smtp.send_message(msg)
         return True, f"Email '{to_email}' was sent successfully"

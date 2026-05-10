@@ -52,5 +52,41 @@
         "notes": "",
         "currency": "USD",
         "fx_rate": 1.0
+    },
+    {
+        "invoice_id": "INV004",
+        "client_id": "C005",
+        "project_id": "P007",
+        "issue_date": "2026-05-10",
+        "due_days": 1,
+        "items": [
+            {
+                "description": "3d dsign of B2-spirit",
+                "quantity": 20.0,
+                "unit_price": 20.0
+            }
+        ],
+        "status": "Unpaid",
+        "notes": "hey US we lost trust, give me money as early as possible",
+        "currency": "PKR",
+        "fx_rate": 282.0
+    },
+    {
+        "invoice_id": "INV005",
+        "client_id": "C005",
+        "project_id": "P007",
+        "issue_date": "2026-05-10",
+        "due_days": 1,
+        "items": [
+            {
+                "description": "final design shiping",
+                "quantity": 20.0,
+                "unit_price": 120.0
+            }
+        ],
+        "status": "Unpaid",
+        "notes": "send the money to keep experiments running",
+        "currency": "PKR",
+        "fx_rate": 279.75
     }
 ]

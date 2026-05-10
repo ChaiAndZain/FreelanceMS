@@ -8,14 +8,6 @@
         "payment_terms": "Net 15"
     },
     {
-        "client_id": "C002",
-        "name": "Ali",
-        "email": "zaindevexp@gmail.com",
-        "phone": "+9323423354",
-        "company": "Meta",
-        "payment_terms": "Net 15"
-    },
-    {
         "client_id": "C003",
         "name": "Doremon",
         "email": "zaindevexp@gmail.com",
@@ -29,6 +21,14 @@
         "email": "amna@gmail.com",
         "phone": "+94334534534",
         "company": "Google",
+        "payment_terms": "Net 15"
+    },
+    {
+        "client_id": "C005",
+        "name": "Trump",
+        "email": "zaindevexp@gmail.com",
+        "phone": "+134345342",
+        "company": "USA",
         "payment_terms": "Net 15"
     }
 ]
